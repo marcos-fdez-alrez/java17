@@ -26,7 +26,7 @@ class SealedClassesTest
     void checkSealedModifiers()
     {
         /*
-            Reflection API - Dos nuevos métodos añadidos a java.lang.Class
+            Reflection API - 2 new methods added to java.lang.Class
 
             - isSealed()
             - getPermittedSubclasses()
@@ -49,7 +49,7 @@ class SealedClassesTest
         @DisplayName("Test MotorVehicle direct subclasses number of wheels")
         @ParameterizedTest
         @MethodSource("provideParameters")
-        public void testParametersFromMethod(MotorVehicle vehicle) {
+        void testParametersFromMethod(MotorVehicle vehicle) {
             switch (vehicle) {
                 case Motorcycle moto:
                     assertThat(moto.getNumberOfWheels()).isEqualTo(3);
@@ -61,7 +61,6 @@ class SealedClassesTest
                     fail("This type of motorVehicle was not taking into account. Check switch cases!");
             }
 
-
         }
 
         private static Stream<Arguments> provideParameters() {
@@ -70,9 +69,7 @@ class SealedClassesTest
                     Arguments.of(new Motorcycle()));
         }
 
-
-
-        @DisplayName("Check Bike")
+        @DisplayName("Check Bike Number of Wheels")
         @Test
         void checkBikeNumberOfWheels()
         {
