@@ -13,4 +13,9 @@ public final class Ebike implements MotorVehicle {
         logger.info("Starting the engine!");
     }
 
+    @Override
+    public Integer getNumberOfWheels() {
+        return 2;
+    }
+
 }

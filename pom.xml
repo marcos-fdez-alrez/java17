@@ -16,7 +16,7 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <slf4jVersion>1.7.32</slf4jVersion>
-    <junitVersion>5.1.0</junitVersion>
+    <junitVersion>5.7.0</junitVersion>
     <assertjVersion>3.9.1</assertjVersion>
   </properties>
 
@@ -25,6 +25,13 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junitVersion}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
       <version>${junitVersion}</version>
       <scope>test</scope>
     </dependency>
@@ -101,6 +108,7 @@
         <configuration>
           <source>17</source>
           <target>17</target>
+          <compilerArgs>--enable-preview</compilerArgs>
         </configuration>
       </plugin>
     </plugins>
