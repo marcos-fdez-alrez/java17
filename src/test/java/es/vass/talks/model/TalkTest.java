@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.random.RandomGenerator;
 import java.util.random.RandomGeneratorFactory;
 import java.util.stream.IntStream;
@@ -20,7 +21,6 @@ class TalkTest
 {
 
     Logger logger = LoggerFactory.getLogger(TalkTest.class);
-
 
     @DisplayName("JEP 406 - Sealed Classes Tests")
     @Nested
@@ -107,6 +107,7 @@ class TalkTest
     @Nested
     class NumberGenerator {
 
+        public static final Integer LOWER_BOUND = 0;
         public static final Integer UPPER_BOUND = 8;
         public static final Integer NUMBER_OF_VALUES_TO_GENERATE = 10;
         public static final Integer RANDOM_SEED = 666;
@@ -134,10 +135,44 @@ class TalkTest
 
             RandomGenerator randomGenerator = RandomGeneratorFactory.of("L64X128MixRandom").create(RANDOM_SEED);
 
-            assertThat(IntStream.generate(() ->
-                    randomGenerator.nextInt(UPPER_BOUND)).limit(NUMBER_OF_VALUES_TO_GENERATE).allMatch(x -> x <= UPPER_BOUND))
-                    .isEqualTo(true);
+            Assertions.assertAll(
+                    () -> assertThat(IntStream.generate(() ->   randomGenerator.nextInt(UPPER_BOUND))
+                                                                .limit(NUMBER_OF_VALUES_TO_GENERATE)
+                                                                .allMatch(x -> x < UPPER_BOUND))
+                                                                .isEqualTo(true),
 
+                    // The same using ints( ) method to obtain a stream of random values
+                    () -> assertThat(randomGenerator.ints(NUMBER_OF_VALUES_TO_GENERATE, LOWER_BOUND, UPPER_BOUND )
+                                        .allMatch(x -> x < UPPER_BOUND))
+                                        .isEqualTo(true)
+                    );
+
+        }
+
+
+    }
+
+    @DisplayName("JEP 306 - Restore strict floating point semantics")
+    @Nested
+    class StrictFloatingPointSemantics {
+
+        public static final Double INITIAL_VALUE = 0.1D;
+        public static final Integer OPERATOR_VALUE = 3;
+        public static final Double EXPECTED_VALUE = 0.3D;
+
+        @Disabled
+        @DisplayName("Double Floating Point Problem")
+        @Test
+        void doubleFailingTest()
+        {
+            assertThat( INITIAL_VALUE * OPERATOR_VALUE ).isEqualTo(EXPECTED_VALUE);
+        }
+
+        @DisplayName("BigDecimal to the rescue")
+        @Test
+        void usingBigDecimal()
+        {
+            assertThat(BigDecimal.valueOf(INITIAL_VALUE).multiply(BigDecimal.valueOf(OPERATOR_VALUE)).doubleValue() ).isEqualTo(EXPECTED_VALUE);
         }
 
 
